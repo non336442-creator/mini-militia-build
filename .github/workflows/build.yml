@@ -19,11 +19,13 @@ jobs:
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
+      with:
+        packages: 'platform-tools'
 
     - name: Install NDK and Accept Licenses
       run: |
-        yes | sdkmanager --licenses > /dev/null
-        sdkmanager "ndk;21.4.7075529" "build-tools;30.0.3" "platforms;android-30" > /dev/null
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;21.4.7075529" "build-tools;30.0.3" "platforms;android-30" > /dev/null
 
     - name: Unzip project
       run: |
