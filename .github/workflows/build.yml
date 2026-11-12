@@ -27,19 +27,11 @@ jobs:
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null
         $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;21.4.7075529" "build-tools;30.0.3" "platforms;android-30" > /dev/null
 
-    - name: Unzip project
-      run: |
-        unzip -q "Mini Militia (3).zip"
-
-    - name: Find Project Directory
-      id: find_dir
-      run: |
-        DIR=$(find . -name "build.gradle" -not -path "*/node_modules/*" | head -n 1 | xargs dirname)
-        echo "PROJECT_DIR=$DIR" >> $GITHUB_ENV
-
     - name: Build with Gradle
       run: |
-        cd ${{ env.PROJECT_DIR }}
+        unzip -q "Mini Militia (3).zip"
+        DIR=$(find . -name "gradlew" -not -path "*/node_modules/*" | head -n 1 | xargs dirname)
+        cd "$DIR"
         chmod +x gradlew
         ./gradlew assembleRelease
 
@@ -47,4 +39,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Mod-Menu-APK
-        path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/release/*.apk
+        path: |
+          **/app/build/outputs/apk/release/*.apk
+          **/app/build/outputs/apk/debug/*.apk
